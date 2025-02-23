@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+        function shortenURL() {
+            let long_url = document.getElementById("long_url").value;
+            
+            fetch("shorten.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "long_url=" + encodeURIComponent(long_url)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.short_url) {
+                    document.getElementById("result").innerHTML = `<a href="${data.short_url}" target="_blank">${data.short_url}</a>`;
+                } else {
+                    document.getElementById("result").innerHTML = "<p style='color: red;'>Error: " + data.error + "</p>";
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>URL Shortener</h2>
+    <input type="text" id="long_url" placeholder="Enter long URL" size="50">
+    <button onclick="shortenURL()">Shorten</button>
+    <p id="result"></p>
+</body>
+</html>
